@@ -1,0 +1,3 @@
+name: PaperMakeHook
+version: '${version}'
+main: com.rikonardo.papermake.hook.PaperMakeHook
