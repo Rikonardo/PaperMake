@@ -6,8 +6,7 @@
 
 <div align="center">
     <a href="https://github.com/Rikonardo/PaperMake/issues"><img alt="Open issues" src="https://img.shields.io/github/issues-raw/Rikonardo/PaperMake"/></a>
-    <a href="https://github.com/Rikonardo/PaperMake/releases/latest"><img alt="GitHub downloads" src="https://img.shields.io/github/downloads/Rikonardo/PaperMake/total"></a>
-    <img alt="Version" src="https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fmaven.rikonardo.com%2Freleases%2Fcom%2Frikonardo%2Fpapermake%2FPaperMake%2Fmaven-metadata.xml"/>
+    <a href="https://plugins.gradle.org/plugin/com.rikonardo.papermake"><img alt="Gradle plugin" src="https://img.shields.io/gradle-plugin-portal/v/com.rikonardo.papermake"/></a>
     <a href="https://www.codefactor.io/repository/github/rikonardo/papermake"><img alt="CodeFactor" src="https://www.codefactor.io/repository/github/rikonardo/papermake/badge"/></a>
     <a href="https://discord.gg/zYRTPa3FnQ"><img alt="Discord" src="https://img.shields.io/discord/982967258013896734?color=%237289DA&label=discord&logo=discord&logoColor=%237289DA"></a>
 </div>
