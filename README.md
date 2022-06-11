@@ -17,14 +17,14 @@
 
 **PaperMake** - gradle plugin, designed to simplify development and debugging of Bukkit-based plugins. It provides ability to run development Paper server and quickly reload your plugin to see changes in-game.
 
-## Features:
+## Features
 - **Development server with IDE integration ✅**
 - **Gradle Shadow plugin compatibility ✅**
 - **In-game plugin auto-reload on gradle build and shadowJar tasks ✅**
 - **Working breakpoints in your plugin code and libraries ✅**
 - **Development server console right in IDE ✅**
 
-## Installation:
+## Installation
 To install PaperMake, add this on top of your `build.gradle` file:
 
 ```groovy
@@ -35,7 +35,7 @@ plugins {
 
 *You can add `id 'com.rikonardo.papermake' version '1.0.0'` inside of your existing `plugins { }` block.*
 
-### Kotlin DSL:
+### Kotlin DSL
 Add this on top of your `build.gradle.kts` file:
 
 ```kotlin
@@ -65,3 +65,9 @@ Properties are specified with `-P` prefix. Here's an example:
 ```
 
 You can also use this properties in IDE. For example in IntelliJ IDEA, you can specify them in "Edit Run/Debug Configurations" dialog in "Run" field after devServer task name.
+
+## Additional server configuration
+You can go into `build/papermake/run` directory and edit server configuration files.
+
+## Installing other Minecraft plugins
+Addition Minecraft plugins can be placed into `build/papermake/run/plugins` directory. They will load as usual and PaperMake will not reload them.
