@@ -101,6 +101,6 @@ class PaperMakeHook : JavaPlugin(), EventListener {
             logger.info(text)
         else
             logger.warning(text)
-        Bukkit.getOnlinePlayers().forEach { it.sendMessage("§b§l[PaperMake]§r " + (if (ok) "§a" else "§e") + text) }
+        Bukkit.getOnlinePlayers().forEach { it.sendMessage("§b[PaperMake]§r " + (if (ok) "§a" else "§e") + text) }
     }
 }
