@@ -7,9 +7,14 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.TaskAction
 import java.io.File
+import java.io.StringWriter
+import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
+import java.util.*
 import javax.inject.Inject
+import kotlin.io.path.writeText
+
 
 open class DevServerTask : JavaExec() {
     init {
@@ -67,6 +72,22 @@ open class DevServerTask : JavaExec() {
                 hook.toPath(),
                 StandardCopyOption.REPLACE_EXISTING
             )
+            val fs = FileSystems.newFileSystem(hook.toPath(), null as ClassLoader?)
+            val properties = Properties()
+            properties["papermake.version"] = ReleaseData.version
+            properties["papermake.hook.started"] = System.currentTimeMillis().toString()
+            properties["project.group"] = project.group
+            properties["project.name"] = project.name
+            properties["project.version"] = project.version
+            properties["jdk.version"] = System.getProperty("java.version")
+            properties["gradle.version"] = project.gradle.gradleVersion
+            properties["os.name"] = System.getProperty("os.name")
+            properties["os.version"] = System.getProperty("os.version")
+            properties["os.arch"] = System.getProperty("os.arch")
+            val writer = StringWriter()
+            properties.store(writer, null)
+            fs.getPath("/papermake.properties").writeText(writer.toString())
+            fs.close()
         }
 
         private fun getServer(): File {

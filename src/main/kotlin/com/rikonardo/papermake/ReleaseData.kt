@@ -7,7 +7,7 @@ object ReleaseData {
 
     init {
         val p = Properties()
-        p.load(PaperMakePlugin::class.java.getResourceAsStream("/META-INF/papermake/build.properties"))
+        p.load(javaClass.getResourceAsStream("/META-INF/papermake/build.properties"))
         version = p.getProperty("version")
     }
 }

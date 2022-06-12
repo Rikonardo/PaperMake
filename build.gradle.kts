@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.rikonardo.papermake"
-version = "1.0.0"
+version = "1.0.1"
 
 repositories {
     mavenCentral()
@@ -16,8 +16,8 @@ repositories {
 }
 
 dependencies {
-    implementation("dev.virefire.yok:Yok:1.0.4")
-    implementation("dev.virefire.kson:KSON:1.3.1")
+    compileOnly("dev.virefire.yok:Yok:1.0.4")
+    compileOnly("dev.virefire.kson:KSON:1.3.1")
 }
 
 java {
@@ -37,6 +37,7 @@ task("buildProperties") {
 }
 
 tasks.jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     dependsOn(project(":hook").tasks.build)
     dependsOn("buildProperties")
     from(project(":hook").buildDir.resolve("libs")) {
@@ -44,6 +45,29 @@ tasks.jar {
     }
     from(project.tasks.getByName("buildProperties").temporaryDir) {
         include("build.properties").into("META-INF/papermake")
+    }
+    from(configurations.compileClasspath.get().all.map { el ->
+        el.dependencies.mapNotNull deps@ { dep ->
+            if (dep !is org.gradle.api.internal.artifacts.dependencies.DefaultExternalModuleDependency) return@deps null
+            configurations.compileClasspath.get().files(dep).map {
+                if (it.isDirectory) it else zipTree(it)
+            }
+        }.flatten()
+    }.flatten().distinct())
+}
+
+publishing {
+    publications {
+        register("mavenJava", MavenPublication::class) {
+            from(components["java"])
+            pom {
+                name.set("PaperMake")
+                description.set("Tool for Bukkit-based Minecraft plugins development")
+            }
+        }
+    }
+    repositories {
+        mavenLocal()
     }
 }
 

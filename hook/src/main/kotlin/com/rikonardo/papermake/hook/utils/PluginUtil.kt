@@ -1,4 +1,4 @@
-package com.rikonardo.papermake.hook
+package com.rikonardo.papermake.hook.utils
 
 import org.bukkit.Bukkit
 import org.bukkit.command.Command

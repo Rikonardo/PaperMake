@@ -1,3 +1,7 @@
 name: PaperMakeHook
 version: '${version}'
 main: com.rikonardo.papermake.hook.PaperMakeHook
+commands:
+  pmake:
+    name: PaperMake
+    description: Interact with PaperMake devtool

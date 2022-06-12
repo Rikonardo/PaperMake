@@ -15,38 +15,39 @@
 
 <hr>
 
-**PaperMake** - gradle plugin, designed to simplify development and debugging of Bukkit-based plugins. It provides ability to run development Paper server and quickly reload your plugin to see changes in-game.
+**PaperMake** is a gradle plugin, designed to simplify development and debugging of Bukkit-based plugins. It provides ability to run development Paper server and quickly reload your plugin to see changes in-game.
 
 ## Features
 - **Development server with IDE integration ✅**
 - **Gradle Shadow plugin compatibility ✅**
-- **In-game plugin auto-reload on gradle build and shadowJar tasks ✅**
+- **In-game plugin auto-reload on gradle "build" and "shadowJar" tasks ✅**
 - **Working breakpoints in your plugin code and libraries ✅**
 - **Development server console right in IDE ✅**
+- **Useful in-game commands ✅**
 
 ## Installation
 To install PaperMake, add this on top of your `build.gradle` file:
 
 ```groovy
 plugins {
-    id 'com.rikonardo.papermake' version '1.0.0'
+    id 'com.rikonardo.papermake' version '1.0.1'
 }
 ```
 
-*You can add `id 'com.rikonardo.papermake' version '1.0.0'` inside of your existing `plugins { }` block.*
+*You can add `id 'com.rikonardo.papermake' version '1.0.1'` inside of your existing `plugins { }` block.*
 
 ### Kotlin DSL
 Add this on top of your `build.gradle.kts` file:
 
 ```kotlin
 plugins {
-    id("com.rikonardo.papermake") version "1.0.0"
+    id("com.rikonardo.papermake") version "1.0.1"
 }
 ```
 
-*You can add `id("com.rikonardo.papermake") version "1.0.0"` inside of your existing `plugins { }` block.*
+*You can add `id("com.rikonardo.papermake") version "1.0.1"` inside of your existing `plugins { }` block.*
 
-## Usage:
+## Usage
 Run `devServer` task to start development server.
 
 You can use next optional properties to configure environment:
@@ -66,8 +67,23 @@ Properties are specified with `-P` prefix. Here's an example:
 
 You can also use this properties in IDE. For example in IntelliJ IDEA, you can specify them in "Edit Run/Debug Configurations" dialog in "Run" field after devServer task name.
 
+## In-game commands
+PaperMake provides some useful in-game commands to simplify development.
+
+| Command                                | Description                                               |
+|----------------------------------------|-----------------------------------------------------------|
+| `/pmake`                               | Show help message.                                        |
+| `/pmake info`                          | Display development environment information.              |
+| `/pmake reload`                        | Reload developed plugin without rebuilding it.            |
+| `/pmake console <command>`             | Run command as console without leaving game.              |
+| `/pmake plugin load <plugin jar name>` | Load external plugin from "plugins" directory in runtime. |
+| `/pmake plugin unload <plugin name>`   | Unload external plugin completely (with class unloading). |
+| `/pmake plugin enable <plugin name>`   | Enable disabled plugin.                                   |
+| `/pmake plugin disable <plugin name>`  | Disable plugin without unloading.                         |
+| `/pmake plugin reload <plugin name>`   | Reload plugin without unloading, just disable and enable. |
+
 ## Additional server configuration
 You can go into `build/papermake/run` directory and edit server configuration files.
 
 ## Installing other Minecraft plugins
-Addition Minecraft plugins can be placed into `build/papermake/run/plugins` directory. They will load as usual and PaperMake will not reload them.
+Additional Minecraft plugins can be placed into `build/papermake/run/plugins` directory. You can use `/pmake plugin load` in-game command to load them without restarting development server. They will load as usual and PaperMake will not reload them when reloading your plugin.

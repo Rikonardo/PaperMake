@@ -1,4 +1,4 @@
-package com.rikonardo.papermake.hook
+package com.rikonardo.papermake.hook.utils
 
 import java.io.File
 import java.nio.file.*
