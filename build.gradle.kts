@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.rikonardo.papermake"
-version = "1.0.1"
+version = "1.0.2"
 
 repositories {
     mavenCentral()
@@ -18,6 +18,8 @@ repositories {
 dependencies {
     compileOnly("dev.virefire.yok:Yok:1.0.4")
     compileOnly("dev.virefire.kson:KSON:1.3.1")
+    compileOnly("org.apache.httpcomponents:httpmime:4.5.13")
+    compileOnly("com.google.code.gson:gson:2.9.0")
 }
 
 java {

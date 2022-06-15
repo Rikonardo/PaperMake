@@ -30,25 +30,25 @@ To install PaperMake, add this on top of your `build.gradle` file:
 
 ```groovy
 plugins {
-    id 'com.rikonardo.papermake' version '1.0.1'
+    id 'com.rikonardo.papermake' version '1.0.2'
 }
 ```
 
-*You can add `id 'com.rikonardo.papermake' version '1.0.1'` inside of your existing `plugins { }` block.*
+*You can add `id 'com.rikonardo.papermake' version '1.0.2'` inside of your existing `plugins { }` block.*
 
 ### Kotlin DSL
 Add this on top of your `build.gradle.kts` file:
 
 ```kotlin
 plugins {
-    id("com.rikonardo.papermake") version "1.0.1"
+    id("com.rikonardo.papermake") version "1.0.2"
 }
 ```
 
-*You can add `id("com.rikonardo.papermake") version "1.0.1"` inside of your existing `plugins { }` block.*
+*You can add `id("com.rikonardo.papermake") version "1.0.2"` inside of your existing `plugins { }` block.*
 
 ## Usage
-Run `devServer` task to start development server.
+Run `devServer` task (from `papermake` category) to start development server.
 
 You can use next optional properties to configure environment:
 
@@ -66,6 +66,8 @@ Properties are specified with `-P` prefix. Here's an example:
 ```
 
 You can also use this properties in IDE. For example in IntelliJ IDEA, you can specify them in "Edit Run/Debug Configurations" dialog in "Run" field after devServer task name.
+
+When development server is running, you can use `build` or `shadowJar` (when using shadow plugin) tasks to build and automatically reload your plugin.
 
 ## In-game commands
 PaperMake provides some useful in-game commands to simplify development.
