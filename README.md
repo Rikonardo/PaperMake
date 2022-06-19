@@ -26,7 +26,7 @@
 - **Useful in-game commands ✅**
 
 ## Installation
-To install PaperMake, add this on top of your `build.gradle` file:
+To install PaperMake, add this on top of your `build.gradle` file, to the end of `plugins { }` block:
 
 ```groovy
 plugins {
@@ -34,10 +34,8 @@ plugins {
 }
 ```
 
-*You can add `id 'com.rikonardo.papermake' version '1.0.2'` inside of your existing `plugins { }` block.*
-
 ### Kotlin DSL
-Add this on top of your `build.gradle.kts` file:
+Add this on top of your `build.gradle.kts` file, to the end of `plugins { }` block:
 
 ```kotlin
 plugins {
@@ -45,7 +43,16 @@ plugins {
 }
 ```
 
-*You can add `id("com.rikonardo.papermake") version "1.0.2"` inside of your existing `plugins { }` block.*
+### Notice
+PaperMake should always be specified after java/kotlin and shadow (if you are using it) plugins. Here is an example of correct plugins order:
+
+```groovy
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '...'
+    id 'com.rikonardo.papermake' version '...'
+}
+```
 
 ## Usage
 Run `devServer` task (from `papermake` category) to start development server.
