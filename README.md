@@ -11,8 +11,6 @@
     <a href="https://discord.gg/zYRTPa3FnQ"><img alt="Discord" src="https://img.shields.io/discord/982967258013896734?color=%237289DA&label=discord&logo=discord&logoColor=%237289DA"></a>
 </div>
 
-<br>
-
 <hr>
 
 **PaperMake** is a gradle plugin, designed to simplify development and debugging of Bukkit-based plugins. It provides ability to run development Paper server and quickly reload your plugin to see changes in-game.
@@ -63,7 +61,7 @@ You can use next optional properties to configure environment:
 |-----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `pmake.version` | Minecraft version of development server. Can be any version, which has available paper release. By default, PaperMake wold use latest release.        |
 | `pmake.port`    | Port for development server. Default port: `25565`. Note, that if port unavailable, PaperMake would try to use port, incremented by 1 (e.g. `25566`). |
-| `pmake.dir`     | Path to the directory where dev server will be launched, can be relative to project directory.                                                        |
+| `pmake.dir`     | Path to the directory where dev server will be launched, can be relative to project directory. By default, server runs in `build/papermake/run`.      |
 | `pmake.server`  | Path to custom server jar, can be relative to run directory. If specified, `pmake.version` property will be ignored.                                  |
 | `pmake.gui`     | When `true`, removes default "-nogui" server arg that prevents server gui window from appearing.                                                      |
 | `pmake.args`    | Additional arguments for development server. Fore example, `-o=false` will disable online-mode.                                                       |
@@ -93,7 +91,7 @@ PaperMake provides some useful in-game commands to simplify development.
 | `/pmake plugin reload <plugin name>`   | Reload plugin without unloading, just disable and enable. |
 
 ## Additional server configuration
-You can go into `build/papermake/run` directory and edit server configuration files.
+You can go into server directory (`build/papermake/run` by default) and edit server configuration files.
 
 ## Installing other Minecraft plugins
-Additional Minecraft plugins can be placed into `build/papermake/run/plugins` directory. You can use `/pmake plugin load` in-game command to load them without restarting development server. They will load as usual and PaperMake will not reload them when reloading your plugin.
+Additional Minecraft plugins can be placed into `plugins` folder inside of server directory (`build/papermake/run` by default). You can use `/pmake plugin load` in-game command to load them without restarting development server. They will load as usual and PaperMake will not reload them when reloading your plugin.
