@@ -23,10 +23,12 @@ object PMakeInfo: SubCommand {
             §d----- §b[PaperMake] §d-----§r
             §fPaperMake v§e${RunData.papermakeVersion}§r
             §fRunning on JDK: §e${RunData.jdkVersion}§f, Gradle §e${RunData.gradleVersion}§r
-            §fProject: §e${RunData.projectGroup}§f:§e${RunData.projectName}§f:§e${RunData.projectVersion}§r
             §fHost OS: §e${RunData.osName} (${RunData.osArch})§f, v§e${RunData.osVersion}§r
             §fServer: §e${Bukkit.getServer().name}§r
             §fServer version: §e${Bukkit.getServer().version}§r
+            §fProject group: §e${RunData.projectGroup}§r
+            §fProject name: §e${RunData.projectName}§r
+            §fProject version: §e${RunData.projectVersion}§r
             §fRunning for ${"§e$hours §fhours §e$minutes §fminutes §e$seconds §fseconds"}§r
         """.trimIndent())
     }
