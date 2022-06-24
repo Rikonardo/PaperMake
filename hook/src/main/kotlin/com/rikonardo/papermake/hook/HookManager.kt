@@ -39,7 +39,7 @@ object HookManager {
                 reloadLock = true
             }
             watcher.start()
-            plugin.logger.info("Hook loaded")
+            plugin.logger.info("Loaded PaperMake hook")
         }, 1)
     }
 

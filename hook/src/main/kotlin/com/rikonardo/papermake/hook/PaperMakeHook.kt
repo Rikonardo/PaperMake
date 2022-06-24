@@ -19,14 +19,16 @@ class PaperMakeHook : JavaPlugin() {
             Bukkit.getPluginManager().disablePlugin(this)
             return
         }
-        getCommand("pmake")!!.executor = PMakeCommand
-        getCommand("pmake")!!.tabCompleter = PMakeCommand
+        getCommand("pmake")!!.apply {
+            executor = PMakeCommand
+            tabCompleter = PMakeCommand
+        }
         HookManager.setup(this, File(watch))
     }
 
     override fun onDisable() {
         HookManager.unload()
         HookManager.watcher.stop.set(true)
-        logger.info("Hook unloaded")
+        logger.info("All hooked plugins unloaded, disabling hook")
     }
 }
