@@ -19,9 +19,14 @@ object PMakeConsole: SubCommand {
     override fun onTabComplete(sender: CommandSender, args: Array<out String>): List<String> {
         if (args.size <= 1)
             return getKnownCommands().keys.toList().filter { it.startsWith(args[0]) }
-        val command = Bukkit.getServer().getPluginCommand(args[0]) ?: return emptyList()
-        // Using player CommandSender because of a bug with console sender
-        return command.tabComplete(sender, args[0], args.drop(1).toTypedArray())
+        val command = Bukkit.getServer().getPluginCommand(args[0]) ?:
+        getKnownCommands().entries.find { it.key == args[0] }?.value ?: return emptyList()
+        return try {
+            command.tabComplete(Bukkit.getConsoleSender(), args[0], args.drop(1).toTypedArray())
+        } catch (e: Exception) {
+            // Using player CommandSender because of a bug with console sender
+            command.tabComplete(sender, args[0], args.drop(1).toTypedArray())
+        }
     }
 
     override fun onCommand(sender: CommandSender, args: Array<out String>) {
