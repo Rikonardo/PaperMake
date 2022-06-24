@@ -15,7 +15,6 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.io.path.writeText
 
-
 open class DevServerTask : JavaExec() {
     init {
         group = "PaperMake"
@@ -24,8 +23,8 @@ open class DevServerTask : JavaExec() {
 
     open class PreDevServerTask @Inject constructor(private val devServer: DevServerTask) : DefaultTask() {
         private val dir = project.buildDir.resolve("papermake")
-        private val runDir = dir.resolve("run")
-        private val hook = runDir.resolve("plugins/_papermake_hook.jar")
+        private var runDir = dir.resolve("run")
+        private var hook = runDir.resolve("plugins/_papermake_hook.jar")
         private val serversDir = dir.resolve("servers")
         private val buildDir = dir.resolve("build")
 
@@ -35,9 +34,26 @@ open class DevServerTask : JavaExec() {
 
         @TaskAction
         fun execute() {
+            if (project.hasProperty("pmake.dir")) {
+                runDir = project.projectDir.resolve(project.property("pmake.dir").toString())
+                hook = runDir.resolve("plugins/_papermake_hook.jar")
+            }
             runDir.mkdirs()
             println("*** By using PaperMake dev server, you agree to Minecraft EULA ***")
             val server = getServer()
+            val properties = runDir.resolve("server.properties")
+            if (!properties.exists()) {
+                val p = Properties()
+                p.setProperty("max-tick-time", "0")
+                p.setProperty("motd", "PaperMake Dev Server")
+                p.store(properties.outputStream(), "Minecraft server properties")
+            } else {
+                val p = Properties()
+                p.load(properties.inputStream())
+                if ((p["max-tick-time"]?.toString()?.toIntOrNull() ?: 0) > 0) {
+                    println("WARNING: max-tick-time is set to non-zero value in server.properties, this may cause server to crash when using breakpoints")
+                }
+            }
             installHook()
             val args = mutableListOf<String>()
             if (!project.hasProperty("pmake.gui") || !project.property("pmake.gui").toString().toBoolean())
@@ -93,14 +109,14 @@ open class DevServerTask : JavaExec() {
         private fun getServer(): File {
             if (project.hasProperty("pmake.server")) {
                 val server = project.property("pmake.server").toString()
-                val file = File(server)
-                if (file.exists()) throw IllegalArgumentException("Server file \"${file.canonicalPath}\" does not exist")
+                val file = runDir.resolve(server)
+                if (!file.exists()) throw IllegalArgumentException("Server file \"${file.canonicalPath}\" does not exist")
                 return file
             }
-            return latestPaper()
+            return installPaper()
         }
 
-        private fun latestPaper(): File {
+        private fun installPaper(): File {
             var artifact: String? = null
             var v = ""
             if (project.hasProperty("pmake.version")) {
