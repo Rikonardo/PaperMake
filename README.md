@@ -30,7 +30,7 @@ To install PaperMake, add this on top of your `build.gradle` file, to the end of
 
 ```groovy
 plugins {
-    id 'com.rikonardo.papermake' version '1.0.2'
+    id 'com.rikonardo.papermake' version '1.0.3'
 }
 ```
 
@@ -39,7 +39,7 @@ Add this on top of your `build.gradle.kts` file, to the end of `plugins { }` blo
 
 ```kotlin
 plugins {
-    id("com.rikonardo.papermake") version "1.0.2"
+    id("com.rikonardo.papermake") version "1.0.3"
 }
 ```
 
@@ -63,7 +63,8 @@ You can use next optional properties to configure environment:
 |-----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `pmake.version` | Minecraft version of development server. Can be any version, which has available paper release. By default, PaperMake wold use latest release.        |
 | `pmake.port`    | Port for development server. Default port: `25565`. Note, that if port unavailable, PaperMake would try to use port, incremented by 1 (e.g. `25566`). |
-| `pmake.server`  | Path to custom server jar. If specified, `pmake.version` property will be ignored.                                                                    |
+| `pmake.dir`     | Path to the directory where dev server will be launched, can be relative to project directory.                                                        |
+| `pmake.server`  | Path to custom server jar, can be relative to run directory. If specified, `pmake.version` property will be ignored.                                  |
 | `pmake.gui`     | When `true`, removes default "-nogui" server arg that prevents server gui window from appearing.                                                      |
 | `pmake.args`    | Additional arguments for development server. Fore example, `-o=false` will disable online-mode.                                                       |
 
