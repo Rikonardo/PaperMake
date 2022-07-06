@@ -1,6 +1,7 @@
 name: PaperMakeHook
 version: '${version}'
 main: com.rikonardo.papermake.hook.PaperMakeHook
+api-version: 1.13
 commands:
   pmake:
     name: PaperMake
