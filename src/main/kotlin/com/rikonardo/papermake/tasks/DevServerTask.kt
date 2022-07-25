@@ -2,6 +2,7 @@ package com.rikonardo.papermake.tasks
 
 import com.rikonardo.papermake.ReleaseData
 import com.rikonardo.papermake.utils.freePort
+import com.rikonardo.papermake.utils.getFileSHA256
 import dev.virefire.yok.Yok
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.JavaExec
@@ -117,24 +118,26 @@ open class DevServerTask : JavaExec() {
         }
 
         private fun installPaper(): File {
-            var artifact: String? = null
+            var artifact: Pair<String, String>? = null
+            val isMojmap = project.hasProperty("pmake.mojmap") && project.property("pmake.mojmap").toString().toBoolean()
+            val type = if (isMojmap) "paper-mojmap" else "paper"
             var v = ""
             if (project.hasProperty("pmake.version")) {
                 v = project.property("pmake.version").toString()
-                if (serversDir.resolve("$v.jar").exists()) {
-                    return serversDir.resolve("$v.jar")
+                if (serversDir.resolve("$type/$v.jar").exists()) {
+                    return serversDir.resolve("$type/$v.jar")
                 }
-                artifact = getPaperArtifact(v) ?: throw Exception("No paper build found for version $v")
+                artifact = getPaperArtifact(v, mojmap = isMojmap) ?: throw Exception("No paper build found for version $v")
             } else {
                 try {
                     val paper =
                         Yok.get("https://api.papermc.io/v2/projects/paper").body.json["versions"].list!!.map { it.string!! }
                     for (i in paper.lastIndex downTo 0) {
                         v = paper[i]
-                        if (serversDir.resolve("$v.jar").exists()) {
-                            return serversDir.resolve("$v.jar")
+                        if (serversDir.resolve("$type/$v.jar").exists()) {
+                            return serversDir.resolve("$type/$v.jar")
                         }
-                        artifact = getPaperArtifact(v) ?: continue
+                        artifact = getPaperArtifact(v, mojmap = isMojmap) ?: continue
                         break
                     }
                     if (artifact == null) {
@@ -147,22 +150,35 @@ open class DevServerTask : JavaExec() {
                     throw Exception("Can't get Minecraft server, you can specify it manually via -Ppmake.server=\"/path/to/server.jar\"")
                 }
             }
-            serversDir.mkdirs()
-            val file = serversDir.resolve("${v}.jar")
+            serversDir.resolve(type).mkdirs()
+            val file = serversDir.resolve("$type/${v}.jar")
             println("Downloading Paper server $v")
-            Files.copy(Yok.get(artifact).body.stream, file.toPath())
+            Files.copy(Yok.get(artifact.first).body.stream, file.toPath())
+            if (!project.hasProperty("pmake.noverify") || !project.property("pmake.noverify").toString().toBoolean()) {
+                println("Verifying server checksum")
+                val hash = getFileSHA256(file)
+                if (hash != artifact.second) {
+                    file.delete()
+                    throw Exception("Failed to download Paper server, checksum mismatch. Try running this task again or add -Ppmake.noverify=true to ignore hash checks")
+                }
+            }
             return file
         }
 
-        private fun getPaperArtifact(version: String): String? {
+        private fun getPaperArtifact(version: String, mojmap: Boolean = false): Pair<String, String>? {
             try {
                 val builds =
                     Yok.get("https://api.papermc.io/v2/projects/paper/versions/$version/builds").body.json["builds"].list!!
                 if (builds.isEmpty()) return null
                 val latest = builds.last()
                 val buildNumber: Int = latest["build"].int!!
-                val artifactName = latest["downloads"]["application"]["name"].string!!
-                return "https://api.papermc.io/v2/projects/paper/versions/$version/builds/$buildNumber/downloads/$artifactName"
+                val downloadArtifact = if (mojmap) "mojang-mappings" else "application"
+                val artifactName = latest["downloads"][downloadArtifact]["name"].string!!
+                val artifactHash = latest["downloads"][downloadArtifact]["sha256"].string!!
+                return Pair(
+                    "https://api.papermc.io/v2/projects/paper/versions/$version/builds/$buildNumber/downloads/$artifactName",
+                    artifactHash
+                )
             } catch (e: Exception) {
                 return null
             }
