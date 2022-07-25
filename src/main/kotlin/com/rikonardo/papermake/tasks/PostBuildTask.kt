@@ -24,10 +24,10 @@ open class PostBuildTask : DefaultTask() {
         var artifacts = setOf<File>()
         for (task in artifactTasks) {
             val files = project.tasks.findByName(task)?.outputs?.files?.files
-            if (files.isNullOrEmpty())
-                continue
-            artifacts = files
-            break
+            if (!files.isNullOrEmpty()) {
+                artifacts = files
+                break
+            }
         }
         if (artifacts.isEmpty()) {
             throw IllegalStateException("No artifacts found")
