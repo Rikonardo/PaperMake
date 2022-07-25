@@ -18,7 +18,7 @@
 ## Features
 - **Development server with IDE integration ✅**
 - **Gradle Shadow plugin compatibility ✅**
-- **In-game plugin auto-reload on gradle "build" and "shadowJar" tasks ✅**
+- **In-game plugin auto-reload on Gradle's "build", "shadowJar", and "reobfJar" tasks ✅**
 - **Working breakpoints in your plugin code and libraries ✅**
 - **Development server console right in IDE ✅**
 - **Useful in-game commands ✅**

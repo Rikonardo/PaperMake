@@ -2,9 +2,14 @@ package com.rikonardo.papermake.tasks
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
+import java.io.File
 import kotlin.random.Random
 
 open class PostBuildTask : DefaultTask() {
+
+    // The tasks to try to get artifacts from, in order.
+    private val artifactTasks = arrayOf("reobfJar", "shadowJar", "jar")
+
     private val dir = project.buildDir.resolve("papermake")
     private val buildDir = dir.resolve("build")
     private val trigger = buildDir.resolve("reload.list")
@@ -16,12 +21,17 @@ open class PostBuildTask : DefaultTask() {
 
     @TaskAction
     fun execute() {
-        val jar = project.tasks.findByName("jar")?.outputs?.files?.files
-        val shadow = project.tasks.findByName("shadowJar")?.outputs?.files?.files
-
-        val artifacts =
-            if (shadow != null && shadow.isNotEmpty()) shadow else (if (jar != null && jar.isNotEmpty()) jar else null)
-                ?: throw IllegalStateException("No artifacts found")
+        var artifacts = setOf<File>()
+        for (task in artifactTasks) {
+            val files = project.tasks.findByName(task)?.outputs?.files?.files
+            if (!files.isNullOrEmpty()) {
+                artifacts = files
+                break
+            }
+        }
+        if (artifacts.isEmpty()) {
+            throw IllegalStateException("No artifacts found")
+        }
 
         if (plugins.exists()) plugins.deleteRecursively()
         plugins.mkdirs()
