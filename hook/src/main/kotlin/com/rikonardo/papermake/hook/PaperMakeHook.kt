@@ -21,7 +21,7 @@ class PaperMakeHook : JavaPlugin() {
             return
         }
 
-        if (System.getProperty("pmake.autoop", "false").toBoolean()) {
+        if (System.getProperty("papermake.autoop", "false").toBoolean()) {
             logger.info("Auto-OP enabled, all players that join will be OPed!")
             Bukkit.getPluginManager().registerEvents(PlayerJoinListener, this)
         }
