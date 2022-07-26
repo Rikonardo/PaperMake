@@ -1,6 +1,7 @@
 package com.rikonardo.papermake.hook
 
 import com.rikonardo.papermake.hook.commands.PMakeCommand
+import com.rikonardo.papermake.hook.listeners.PlayerJoinListener
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
@@ -19,6 +20,12 @@ class PaperMakeHook : JavaPlugin() {
             Bukkit.getPluginManager().disablePlugin(this)
             return
         }
+
+        if (System.getProperty("pmake.autoop", "false").toBoolean()) {
+            logger.info("Auto-OP enabled, all players that join will be OPed!")
+            Bukkit.getPluginManager().registerEvents(PlayerJoinListener(), this)
+        }
+
         getCommand("pmake")!!.apply {
             executor = PMakeCommand
             tabCompleter = PMakeCommand
