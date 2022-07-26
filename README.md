@@ -66,6 +66,7 @@ You can use next optional properties to configure environment:
 | `pmake.dir`      | Path to the directory where dev server will be launched, can be relative to project directory. By default, server runs in `build/papermake/run`.            |
 | `pmake.server`   | Path to custom server jar, can be relative to run directory. If specified, `pmake.version`, `pmake.mojmap` and `pmake.noverify` properties will be ignored. |
 | `pmake.gui`      | When `true`, removes default "-nogui" server arg that prevents server gui window from appearing.                                                            |
+| `pmake.autoop`   | When `true`, *all* players that join the server will be OPed.                                                                                               |
 | `pmake.args`     | Additional arguments for development server. Fore example, `-o=false` will disable online-mode.                                                             |
 
 Properties are specified with `-P` prefix. Here's an example:
