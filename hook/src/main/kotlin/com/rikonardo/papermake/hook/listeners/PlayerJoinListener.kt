@@ -10,8 +10,11 @@ class PlayerJoinListener(private val plugin: JavaPlugin) : Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onJoin(e: PlayerJoinEvent) {
-        e.player.isOp = true
-        plugin.logger.info("OPed " + e.player.name + "!")
+        val player = e.player;
+        if (player.isOp)
+            return;
+        player.isOp = true
+        plugin.logger.info("OPed " + player.name + "!")
     }
 
 }
