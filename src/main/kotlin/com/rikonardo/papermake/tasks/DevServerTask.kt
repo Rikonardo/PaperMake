@@ -75,6 +75,7 @@ open class DevServerTask : JavaExec() {
             }
             devServer.systemProperty("com.mojang.eula.agree", "true")
             devServer.systemProperty("papermake.watch", buildDir.canonicalPath)
+            devServer.systemProperty("papermake.autoop", project.hasProperty("pmake.autoop") && project.property("pmake.autoop").toString().toBoolean())
             devServer.classpath(server)
             devServer.standardInput = System.`in`
             devServer.workingDir = runDir
