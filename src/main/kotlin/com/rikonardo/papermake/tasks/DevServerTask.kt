@@ -8,10 +8,12 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.TaskAction
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.StringWriter
 import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
+import java.nio.file.StandardOpenOption
 import java.util.*
 import javax.inject.Inject
 import kotlin.io.path.writeText
@@ -44,10 +46,9 @@ open class DevServerTask : JavaExec() {
             val server = getServer()
             val properties = runDir.resolve("server.properties")
             if (!properties.exists()) {
-                val p = Properties()
-                p.setProperty("max-tick-time", "0")
-                p.setProperty("motd", "PaperMake Dev Server")
-                p.store(properties.outputStream(), "Minecraft server properties")
+                val internalProps = DevServerTask::class.java.classLoader.getResourceAsStream("templates/server.properties")
+                    ?: throw FileNotFoundException("Failed to find server.properties template")
+                Files.write(properties.toPath(), internalProps.readBytes(), StandardOpenOption.CREATE_NEW)
             } else {
                 val p = Properties()
                 p.load(properties.inputStream())
