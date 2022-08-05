@@ -68,6 +68,7 @@ You can use next optional properties to configure environment:
 | `pmake.gui`      | When `true`, removes default "-nogui" server arg that prevents server gui window from appearing.                                                            |
 | `pmake.autoop`   | When `true`, *all* players that join the server will be OPed.                                                                                               |
 | `pmake.args`     | Additional arguments for development server. Fore example, `-o=false` will disable online-mode.                                                             |
+| `pmake.icon`     | When `true`, the server icon will be set to the PaperMake logo. Defaults to `true`.                                                                         |
 
 Properties are specified with `-P` prefix. Here's an example:
 ```shell

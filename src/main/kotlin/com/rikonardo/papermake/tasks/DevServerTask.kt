@@ -74,8 +74,10 @@ open class DevServerTask : JavaExec() {
                 it.copyTo(runDir.resolve("plugins").resolve("_papermake_hooked_" + it.name))
             }
             devServer.systemProperty("com.mojang.eula.agree", "true")
+            //todo: Implement a better way to pass properties
             devServer.systemProperty("papermake.watch", buildDir.canonicalPath)
             devServer.systemProperty("papermake.autoop", project.hasProperty("pmake.autoop") && project.property("pmake.autoop").toString().toBoolean())
+            devServer.systemProperty("papermake.icon", project.hasProperty("pmake.icon") && project.property("pmake.icon").toString().toBoolean())
             devServer.classpath(server)
             devServer.standardInput = System.`in`
             devServer.workingDir = runDir
