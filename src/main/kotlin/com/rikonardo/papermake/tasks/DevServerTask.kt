@@ -47,6 +47,17 @@ open class DevServerTask : JavaExec() {
                 val p = Properties()
                 p.setProperty("max-tick-time", "0")
                 p.setProperty("motd", "PaperMake Dev Server")
+                if (project.hasProperty("pmake.serverprops")) {
+                    val rawProps = project.property("pmake.serverprops").toString()
+                    val props = rawProps.split(",")
+                    for (prop in props) {
+                        val args = prop.split("=")
+                        if (args.size != 2) {
+                            throw Exception("Invalid server property '$prop'")
+                        }
+                        p.setProperty(args[0], args[1])
+                    }
+                }
                 p.store(properties.outputStream(), "Minecraft server properties")
             } else {
                 val p = Properties()
