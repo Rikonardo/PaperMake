@@ -12,6 +12,7 @@ import java.io.StringWriter
 import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
+import java.nio.file.StandardOpenOption
 import java.util.*
 import javax.inject.Inject
 import kotlin.io.path.writeText
@@ -73,10 +74,18 @@ open class DevServerTask : JavaExec() {
             buildDir.resolve("artifacts").listFiles()?.forEach {
                 it.copyTo(runDir.resolve("plugins").resolve("_papermake_hooked_" + it.name))
             }
+            val iconFile = runDir.resolve("server-icon.png")
+            if (!iconFile.exists()) {
+                val internalIcon = DevServerTask::class.java.classLoader.getResourceAsStream("server-icon.png")
+                if (internalIcon == null) {
+                    println("Failed to find default server icon!")
+                } else {
+                    Files.write(iconFile.toPath(), internalIcon.readBytes(), StandardOpenOption.CREATE_NEW)
+                }
+            }
             devServer.systemProperty("com.mojang.eula.agree", "true")
             devServer.systemProperty("papermake.watch", buildDir.canonicalPath)
             devServer.systemProperty("papermake.autoop", project.hasProperty("pmake.autoop") && project.property("pmake.autoop").toString().toBoolean())
-            devServer.systemProperty("papermake.icon", project.hasProperty("pmake.icon") && project.property("pmake.icon").toString().toBoolean())
             devServer.classpath(server)
             devServer.standardInput = System.`in`
             devServer.workingDir = runDir
