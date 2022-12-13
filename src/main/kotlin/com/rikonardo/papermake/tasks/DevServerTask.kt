@@ -44,6 +44,7 @@ open class DevServerTask : JavaExec() {
             println("*** By using PaperMake dev server, you agree to Minecraft EULA ***")
             val server = getServer()
             val properties = runDir.resolve("server.properties")
+            val firstRun = !properties.exists()
             if (!properties.exists()) {
                 val p = Properties()
                 p.setProperty("max-tick-time", "0")
@@ -75,7 +76,7 @@ open class DevServerTask : JavaExec() {
                 it.copyTo(runDir.resolve("plugins").resolve("_papermake_hooked_" + it.name))
             }
             val iconFile = runDir.resolve("server-icon.png")
-            if (!iconFile.exists()) {
+            if (firstRun && !iconFile.exists()) {
                 val internalIcon = DevServerTask::class.java.classLoader.getResourceAsStream("server-icon.png")
                 if (internalIcon == null) {
                     println("Failed to find default server icon!")
