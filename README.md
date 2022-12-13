@@ -28,7 +28,7 @@ To install PaperMake, add this on top of your `build.gradle` file, to the end of
 
 ```groovy
 plugins {
-    id 'com.rikonardo.papermake' version '1.0.4'
+    id 'com.rikonardo.papermake' version '1.0.5'
 }
 ```
 
@@ -37,7 +37,7 @@ Add this on top of your `build.gradle.kts` file, to the end of `plugins { }` blo
 
 ```kotlin
 plugins {
-    id("com.rikonardo.papermake") version "1.0.4"
+    id("com.rikonardo.papermake") version "1.0.5"
 }
 ```
 
