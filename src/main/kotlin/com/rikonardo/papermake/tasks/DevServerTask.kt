@@ -12,6 +12,7 @@ import java.io.StringWriter
 import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
+import java.nio.file.StandardOpenOption
 import java.util.*
 import javax.inject.Inject
 import kotlin.io.path.writeText
@@ -52,6 +53,7 @@ open class DevServerTask : JavaExec() {
             println("*** By using PaperMake dev server, you agree to Minecraft EULA ***")
             val server = getServer()
             val propertiesFile = runDir.resolve("server.properties")
+            val firstRun = !propertiesFile.exists()
             val properties = Properties()
             if (!propertiesFile.exists()) {
                 properties.setProperty("max-tick-time", "0")
@@ -91,6 +93,15 @@ open class DevServerTask : JavaExec() {
             }
             buildDir.resolve("artifacts").listFiles()?.forEach {
                 it.copyTo(runDir.resolve("plugins").resolve("_papermake_hooked_" + it.name))
+            }
+            val iconFile = runDir.resolve("server-icon.png")
+            if (firstRun && !iconFile.exists()) {
+                val internalIcon = DevServerTask::class.java.classLoader.getResourceAsStream("server-icon.png")
+                if (internalIcon == null) {
+                    println("Failed to find default server icon!")
+                } else {
+                    Files.write(iconFile.toPath(), internalIcon.readBytes(), StandardOpenOption.CREATE_NEW)
+                }
             }
             devServer.systemProperty("com.mojang.eula.agree", "true")
             devServer.systemProperty("papermake.watch", buildDir.canonicalPath)
