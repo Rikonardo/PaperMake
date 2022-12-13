@@ -57,18 +57,19 @@ Run `devServer` task (from `papermake` category) to start development server.
 
 You can use next optional properties to configure environment:
 
-| Property          | Description                                                                                                                                                 |
-|-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `pmake.version`   | Minecraft version of development server. Can be any version, which has available paper release. By default, PaperMake would use latest release.             |
-| `pmake.mojmap`    | If `true`, downloads Paper version that uses Mojang's deobfuscation mappings.                                                                               |
-| `pmake.noverify`  | If `true`, checksum verification of the downloaded Paper server is not performed.                                                                           |
-| `pmake.port`      | Port for development server. Default port: `25565`. Note, that if port unavailable, PaperMake would try to use port, incremented by 1 (e.g. `25566`).       |
-| `pmake.dir`       | Path to the directory where dev server will be launched, can be relative to project directory. By default, server runs in `build/papermake/run`.            |
-| `pmake.server`    | Path to custom server jar, can be relative to run directory. If specified, `pmake.version`, `pmake.mojmap` and `pmake.noverify` properties will be ignored. |
-| `pmake.gui`       | When `true`, removes default "-nogui" server arg that prevents server gui window from appearing.                                                            |
-| `pmake.autoop`    | When `true`, *all* players that join the server will be OPed.                                                                                               |
-| `pmake.args`      | Additional arguments for development server. Fore example, `-o=false` will disable online-mode.                                                             |
-| `pmake.gamerules` | GameRules to set for all worlds, seperated by commas (`,`). Example: `"doDaylightCycle=false,doWeatherCycle=false"`                                         |
+| Property            | Description                                                                                                                                                 |
+|---------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `pmake.version`     | Minecraft version of development server. Can be any version, which has available paper release. By default, PaperMake would use latest release.             |
+| `pmake.mojmap`      | If `true`, downloads Paper version that uses Mojang's deobfuscation mappings.                                                                               |
+| `pmake.noverify`    | If `true`, checksum verification of the downloaded Paper server is not performed.                                                                           |
+| `pmake.port`        | Port for development server. Default port: `25565`. Note, that if port unavailable, PaperMake would try to use port, incremented by 1 (e.g. `25566`).       |
+| `pmake.dir`         | Path to the directory where dev server will be launched, can be relative to project directory. By default, server runs in `build/papermake/run`.            |
+| `pmake.server`      | Path to custom server jar, can be relative to run directory. If specified, `pmake.version`, `pmake.mojmap` and `pmake.noverify` properties will be ignored. |
+| `pmake.gui`         | When `true`, removes default "-nogui" server arg that prevents server gui window from appearing.                                                            |
+| `pmake.autoop`      | When `true`, *all* players that join the server will be OPed.                                                                                               |
+| `pmake.args`        | Additional arguments for development server. For example, `-o=false` will disable online-mode.                                                              |
+| `pmake.serverprops` | Properties to set in the `server.properties` file, seperated by commas (`,`). Example: `"motd=Howdy!,pvp=false"`                                            |
+| `pmake.gamerules`   | GameRules to set for all worlds, seperated by commas (`,`). Example: `"doDaylightCycle=false,doWeatherCycle=false"`                                         |
 
 Properties are specified with `-P` prefix. Here's an example:
 ```shell

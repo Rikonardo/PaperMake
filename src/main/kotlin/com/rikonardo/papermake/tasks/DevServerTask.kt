@@ -52,20 +52,30 @@ open class DevServerTask : JavaExec() {
             runDir.mkdirs()
             println("*** By using PaperMake dev server, you agree to Minecraft EULA ***")
             val server = getServer()
-            val properties = runDir.resolve("server.properties")
-            val firstRun = !properties.exists()
-            if (!properties.exists()) {
-                val p = Properties()
-                p.setProperty("max-tick-time", "0")
-                p.setProperty("motd", "PaperMake Dev Server")
-                p.store(properties.outputStream(), "Minecraft server properties")
+            val propertiesFile = runDir.resolve("server.properties")
+            val firstRun = !propertiesFile.exists()
+            val properties = Properties()
+            if (!propertiesFile.exists()) {
+                properties.setProperty("max-tick-time", "0")
+                properties.setProperty("motd", "PaperMake Dev Server")
             } else {
-                val p = Properties()
-                p.load(properties.inputStream())
-                if ((p["max-tick-time"]?.toString()?.toIntOrNull() ?: 0) > 0) {
+                properties.load(propertiesFile.inputStream())
+                if ((properties["max-tick-time"]?.toString()?.toIntOrNull() ?: 0) > 0) {
                     println("WARNING: max-tick-time is set to non-zero value in server.properties, this may cause server to crash when using breakpoints")
                 }
             }
+            if (project.hasProperty("pmake.serverprops")) {
+                val rawProps = project.property("pmake.serverprops").toString()
+                val props = rawProps.split(",")
+                for (prop in props) {
+                    val args = prop.split("=")
+                    if (args.size != 2) {
+                        throw Exception("Invalid server property '$prop'")
+                    }
+                    properties.setProperty(args[0], args[1])
+                }
+            }
+            properties.store(propertiesFile.outputStream(), "Minecraft server properties")
             installHook()
             val args = mutableListOf<String>()
             if ((minorVersion >= 15 && (minorVersion != 15 || patchVersion > 1)) && (!project.hasProperty("pmake.gui") || !project.property("pmake.gui").toString().toBoolean()))
