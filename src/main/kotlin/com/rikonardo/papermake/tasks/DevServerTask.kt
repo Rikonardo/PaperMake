@@ -28,6 +28,15 @@ open class DevServerTask : JavaExec() {
         private var hook = runDir.resolve("plugins/_papermake_hook.jar")
         private val serversDir = dir.resolve("servers")
         private val buildDir = dir.resolve("build")
+        private var version = ""
+            set(value) {
+                field = value
+                val split = value.split(".")
+                minorVersion = split[1].toInt()
+                patchVersion = if (split.size >= 3) split[2].toInt() else 0
+            }
+        private var minorVersion = -1
+        private var patchVersion = -1
 
         init {
             description = "This task is executed before launching devServer, you don't need to run it manually."
@@ -67,7 +76,7 @@ open class DevServerTask : JavaExec() {
             properties.store(propertiesFile.outputStream(), "Minecraft server properties")
             installHook()
             val args = mutableListOf<String>()
-            if (!project.hasProperty("pmake.gui") || !project.property("pmake.gui").toString().toBoolean())
+            if ((minorVersion >= 15 && (minorVersion != 15 || patchVersion > 1)) && (!project.hasProperty("pmake.gui") || !project.property("pmake.gui").toString().toBoolean()))
                 args.add("-nogui")
             val port = freePort(
                 if (project.hasProperty("pmake.port")) project.property("pmake.port").toString().toInt()
@@ -86,6 +95,9 @@ open class DevServerTask : JavaExec() {
             devServer.systemProperty("com.mojang.eula.agree", "true")
             devServer.systemProperty("papermake.watch", buildDir.canonicalPath)
             devServer.systemProperty("papermake.autoop", project.hasProperty("pmake.autoop") && project.property("pmake.autoop").toString().toBoolean())
+            if (project.hasProperty("pmake.gamerules")) {
+                devServer.systemProperty("papermake.gamerules", project.property("pmake.gamerules").toString())
+            }
             devServer.classpath(server)
             devServer.standardInput = System.`in`
             devServer.workingDir = runDir
@@ -132,23 +144,22 @@ open class DevServerTask : JavaExec() {
             var artifact: Pair<String, String>? = null
             val isMojmap = project.hasProperty("pmake.mojmap") && project.property("pmake.mojmap").toString().toBoolean()
             val type = if (isMojmap) "paper-mojmap" else "paper"
-            var v = ""
             if (project.hasProperty("pmake.version")) {
-                v = project.property("pmake.version").toString()
-                if (serversDir.resolve("$type/$v.jar").exists()) {
-                    return serversDir.resolve("$type/$v.jar")
+                version = project.property("pmake.version").toString()
+                if (serversDir.resolve("$type/$version.jar").exists()) {
+                    return serversDir.resolve("$type/$version.jar")
                 }
-                artifact = getPaperArtifact(v, mojmap = isMojmap) ?: throw Exception("No paper build found for version $v")
+                artifact = getPaperArtifact(version, mojmap = isMojmap) ?: throw Exception("No paper build found for version $version")
             } else {
                 try {
                     val paper =
                         Yok.get("https://api.papermc.io/v2/projects/paper").body.json["versions"].list!!.map { it.string!! }
                     for (i in paper.lastIndex downTo 0) {
-                        v = paper[i]
-                        if (serversDir.resolve("$type/$v.jar").exists()) {
-                            return serversDir.resolve("$type/$v.jar")
+                        version = paper[i]
+                        if (serversDir.resolve("$type/$version.jar").exists()) {
+                            return serversDir.resolve("$type/$version.jar")
                         }
-                        artifact = getPaperArtifact(v, mojmap = isMojmap) ?: continue
+                        artifact = getPaperArtifact(version, mojmap = isMojmap) ?: continue
                         break
                     }
                     if (artifact == null) {
@@ -162,8 +173,8 @@ open class DevServerTask : JavaExec() {
                 }
             }
             serversDir.resolve(type).mkdirs()
-            val file = serversDir.resolve("$type/${v}.jar")
-            println("Downloading Paper server $v")
+            val file = serversDir.resolve("$type/$version.jar")
+            println("Downloading Paper server $version")
             Files.copy(Yok.get(artifact.first).body.stream, file.toPath())
             if (!project.hasProperty("pmake.noverify") || !project.property("pmake.noverify").toString().toBoolean()) {
                 println("Verifying server checksum")
