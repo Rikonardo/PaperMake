@@ -3,7 +3,7 @@ package com.rikonardo.papermake.hook.commands.pmake
 import com.rikonardo.papermake.hook.HookManager
 import com.rikonardo.papermake.hook.commands.SubCommand
 import com.rikonardo.papermake.hook.plugin
-import com.rikonardo.papermake.hook.utils.PluginUtil
+import com.rikonardo.papermake.hook.pluginUtil
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import java.io.File
@@ -75,7 +75,7 @@ object PMakePlugin : SubCommand {
                         sender.sendMessage("§b[PaperMake]§r §cPlugin already loaded§r")
                         return
                     }
-                    val p = PluginUtil.load(file)
+                    val p = pluginUtil.load(file)
                     if (p == null) {
                         sender.sendMessage("§b[PaperMake]§r §cFailed to load plugin§r")
                         return
@@ -102,7 +102,7 @@ object PMakePlugin : SubCommand {
                         sender.sendMessage("§b[PaperMake]§r §cCannot unload developed plugin, use /pmake reload§r")
                         return
                     }
-                    if (!PluginUtil.unload(p)) {
+                    if (!pluginUtil.unload(p)) {
                         sender.sendMessage("§b[PaperMake]§r §cFailed to unload plugin§r")
                         return
                     }

@@ -109,6 +109,9 @@ open class DevServerTask : JavaExec() {
             if (project.hasProperty("pmake.gamerules")) {
                 devServer.systemProperty("papermake.gamerules", project.property("pmake.gamerules").toString())
             }
+            if (project.hasProperty("pmake.newloader")) {
+                devServer.systemProperty("papermake.newloader", project.property("pmake.newloader").toString().toBoolean())
+            }
             devServer.classpath(server)
             devServer.standardInput = System.`in`
             devServer.workingDir = runDir

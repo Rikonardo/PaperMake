@@ -1,12 +1,12 @@
 plugins {
-    kotlin("jvm") version "1.7.0"
+    kotlin("jvm") version "1.8.10"
     id("java-gradle-plugin")
     id("maven-publish")
     id("com.gradle.plugin-publish") version "1.0.0-rc-2"
 }
 
 group = "com.rikonardo.papermake"
-version = "1.0.5"
+version = "1.0.6"
 
 repositories {
     mavenCentral()

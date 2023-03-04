@@ -28,7 +28,7 @@ To install PaperMake, add this on top of your `build.gradle` file, to the end of
 
 ```groovy
 plugins {
-    id 'com.rikonardo.papermake' version '1.0.5'
+    id 'com.rikonardo.papermake' version '1.0.6'
 }
 ```
 
@@ -37,7 +37,7 @@ Add this on top of your `build.gradle.kts` file, to the end of `plugins { }` blo
 
 ```kotlin
 plugins {
-    id("com.rikonardo.papermake") version "1.0.5"
+    id("com.rikonardo.papermake") version "1.0.6"
 }
 ```
 
@@ -70,6 +70,7 @@ You can use next optional properties to configure environment:
 | `pmake.args`        | Additional arguments for development server. For example, `-o=false` will disable online-mode.                                                              |
 | `pmake.serverprops` | Properties to set in the `server.properties` file, seperated by commas (`,`). Example: `"motd=Howdy!,pvp=false"`                                            |
 | `pmake.gamerules`   | GameRules to set for all worlds, seperated by commas (`,`). Example: `"doDaylightCycle=false,doWeatherCycle=false"`                                         |
+| `pmake.newloader`   | When specifies, overrides PaperMake's automatic detection of Paper's new plugin loader system. Can be `true` of `false`.                                    |
 
 Properties are specified with `-P` prefix. Here's an example:
 ```shell

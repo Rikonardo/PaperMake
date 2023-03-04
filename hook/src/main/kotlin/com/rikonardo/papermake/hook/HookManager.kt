@@ -1,10 +1,12 @@
 package com.rikonardo.papermake.hook
 
 import com.rikonardo.papermake.hook.utils.FileWatcher
-import com.rikonardo.papermake.hook.utils.PluginUtil
 import org.bukkit.Bukkit
 import org.bukkit.plugin.Plugin
+import org.bukkit.plugin.PluginDescriptionFile
 import java.io.File
+import java.nio.file.FileSystems
+import kotlin.io.path.inputStream
 
 object HookManager {
     val loaded = mutableSetOf<Plugin>()
@@ -20,13 +22,13 @@ object HookManager {
             File("plugins").listFiles()?.forEach { file ->
                 if (file.name.startsWith("_papermake_hooked_")) {
                     try {
-                        val descr = plugin.pluginLoader.getPluginDescription(file)
+                        val fs = FileSystems.newFileSystem(file.toPath(), null as ClassLoader?)
+                        val descr = PluginDescriptionFile(fs.getPath("plugin.yml").inputStream())
+                        fs.close()
                         Bukkit.getPluginManager().getPlugin(descr.name)?.let {
                             loaded.add(it)
                         }
-                    } catch (_: Exception) {
-                        // ignore
-                    }
+                    } catch (ignored: Exception) { }
                     previousLoad.add(file)
                 }
             }
@@ -46,7 +48,7 @@ object HookManager {
     fun unload() {
         loaded.forEach {
             try {
-                PluginUtil.unload(it)
+                pluginUtil.unload(it)
                 broadcast("${it.name} unloaded", true)
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -65,7 +67,7 @@ object HookManager {
         (if (previous) previousLoad else watchDir.resolve("reload.list").readLines().map { File(it) }).forEach {
             if (!previous) previousLoad.add(it)
             try {
-                val plugin = PluginUtil.load(it)
+                val plugin = pluginUtil.load(it)
                 if (plugin != null) {
                     loaded.add(plugin)
                     broadcast("${plugin.name} loaded", true)
