@@ -70,7 +70,7 @@ You can use next optional properties to configure environment:
 | `pmake.args`        | Additional arguments for development server. For example, `-o=false` will disable online-mode.                                                              |
 | `pmake.serverprops` | Properties to set in the `server.properties` file, seperated by commas (`,`). Example: `"motd=Howdy!,pvp=false"`                                            |
 | `pmake.gamerules`   | GameRules to set for all worlds, seperated by commas (`,`). Example: `"doDaylightCycle=false,doWeatherCycle=false"`                                         |
-| `pmake.newloader`   | When specifies, overrides PaperMake's automatic detection of Paper's new plugin loader system. Can be `true` of `false`.                                    |
+| `pmake.newloader`   | When specified, overrides PaperMake's automatic detection of Paper's new plugin loader system. Can be `true` or `false`.                                    |
 
 Properties are specified with `-P` prefix. Here's an example:
 ```shell
