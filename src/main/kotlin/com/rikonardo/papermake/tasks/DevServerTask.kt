@@ -33,9 +33,11 @@ open class DevServerTask : JavaExec() {
             set(value) {
                 field = value
                 val split = value.split(".")
+                majorVersion = split[0].toInt()
                 minorVersion = split[1].toInt()
                 patchVersion = if (split.size >= 3) split[2].toInt() else 0
             }
+        private var majorVersion = -1
         private var minorVersion = -1
         private var patchVersion = -1
 
@@ -78,7 +80,7 @@ open class DevServerTask : JavaExec() {
             properties.store(propertiesFile.outputStream(), "Minecraft server properties")
             installHook()
             val args = mutableListOf<String>()
-            if ((minorVersion >= 15 && (minorVersion != 15 || patchVersion > 1)) && (!project.hasProperty("pmake.gui") || !project.property("pmake.gui").toString().toBoolean()))
+            if ((majorVersion > 1 || (majorVersion == 1 && (minorVersion >= 15 && (minorVersion != 15 || patchVersion > 1)))) && (!project.hasProperty("pmake.gui") || !project.property("pmake.gui").toString().toBoolean()))
                 args.add("-nogui")
             val port = freePort(
                 if (project.hasProperty("pmake.port")) project.property("pmake.port").toString().toInt()
