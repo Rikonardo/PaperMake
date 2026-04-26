@@ -167,7 +167,7 @@ open class DevServerTask : JavaExec() {
             } else {
                 try {
                     val paper =
-                        Yok.get("https://api.papermc.io/v2/projects/paper").body.json["versions"].list!!.map { it.string!! }
+                        Yok.get("https://fill.papermc.io/v3/projects/paper").body.json["versions"].list!!.map { it.string!! }
                     for (i in paper.lastIndex downTo 0) {
                         version = paper[i]
                         if (serversDir.resolve("$type/$version.jar").exists()) {
@@ -204,18 +204,21 @@ open class DevServerTask : JavaExec() {
         private fun getPaperArtifact(version: String, mojmap: Boolean = false): Pair<String, String>? {
             try {
                 val builds =
-                    Yok.get("https://api.papermc.io/v2/projects/paper/versions/$version/builds").body.json["builds"].list!!
+                    Yok.get("https://fill.papermc.io/v3/projects/paper/versions/$version/builds").body.json.list!!
                 if (builds.isEmpty()) return null
-                val latest = builds.last()
-                val buildNumber: Int = latest["build"].int!!
-                val downloadArtifact = if (mojmap) "mojang-mappings" else "application"
-                val artifactName = latest["downloads"][downloadArtifact]["name"].string!!
-                val artifactHash = latest["downloads"][downloadArtifact]["sha256"].string!!
+                val latest = builds.first()
+                val downloads = latest["downloads"]
+                val selected = if (mojmap && downloads.has("server:mojang")) {
+                    downloads["server:mojang"]
+                } else {
+                    downloads["server:default"]
+                }
+                val artifactHash = selected["checksums"]["sha256"].string!!
                 return Pair(
-                    "https://api.papermc.io/v2/projects/paper/versions/$version/builds/$buildNumber/downloads/$artifactName",
+                    selected["url"].string!!,
                     artifactHash
                 )
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 return null
             }
         }
